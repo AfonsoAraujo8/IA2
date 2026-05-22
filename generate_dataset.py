@@ -2,71 +2,91 @@ import pandas as pd
 import numpy as np
 import random
 
-# Reprodutibilidade
+# Reproducibility
+
 np.random.seed(42)
 
-# Número de samples
-n_samples = 2000
+# Number of samples
+
+n_samples = 3000
 
 data = []
 
-traffic_sources = ["Organic", "Ads", "Social Media", "Email"]
-devices = ["Mobile", "Desktop", "Tablet"]
+traffic_sources = [
+    "Organic",
+    "Ads",
+    "Social Media",
+    "Email"
+]
+
+devices = [
+    "Mobile",
+    "Desktop",
+    "Tablet"
+]
+
+# Generate dataset
 
 for _ in range(n_samples):
 
-    age = np.random.randint(18, 65)
+    # Decide if user converts
+    converted = np.random.choice([0, 1],p=[0.5, 0.5])
 
-    previous_purchases = np.random.poisson(3)
+    # USERS WHO CONVERT
 
-    traffic_source = random.choice(traffic_sources)
+    if converted == 1:
 
-    time_on_site = round(np.random.normal(8, 3), 2)
+        age = np.random.randint(25, 55)
+
+        previous_purchases = np.random.poisson(5)
+
+        traffic_source = np.random.choice(["Email", "Organic", "Social Media"],p=[0.4, 0.4, 0.2])
+
+        time_on_site = round(np.random.normal(12, 3), 2)
+
+        cart_value = round(np.random.normal(180, 50), 2)
+
+        viewed_reviews = np.random.choice([0, 1],p=[0.2, 0.8])
+
+        pages_visited = np.random.randint(8, 20)
+
+        device = np.random.choice(["Desktop", "Mobile", "Tablet"],p=[0.5, 0.3, 0.2])
+
+        added_to_cart = np.random.choice([0, 1],p=[0.25, 0.75])
+
+    # USERS WHO DO NOT CONVERT
+
+    else:
+
+        age = np.random.randint(18, 65)
+
+        previous_purchases = np.random.poisson(1)
+
+        traffic_source = np.random.choice(["Ads", "Social Media", "Organic"],p=[0.5, 0.3, 0.2])
+
+        time_on_site = round(np.random.normal(6, 3), 2)
+
+        cart_value = round(np.random.normal(80, 45), 2)
+
+        viewed_reviews = np.random.choice([0, 1],p=[0.7, 0.3])
+
+        pages_visited = np.random.randint(1, 10)
+
+        device = np.random.choice(["Mobile", "Desktop", "Tablet"],p=[0.6, 0.2, 0.2])
+
+        added_to_cart = np.random.choice([0, 1],p=[0.6, 0.4])
+
+    # Avoid negative values
     time_on_site = max(1, time_on_site)
-
-    cart_value = round(np.random.normal(120, 60), 2)
     cart_value = max(5, cart_value)
 
-    viewed_reviews = np.random.choice([0, 1], p=[0.4, 0.6])
+    # Realistic noise to balance results out
 
-    pages_visited = np.random.randint(1, 20)
+    if np.random.rand() < 0.15:
+        converted = 1 - converted
 
-    device = random.choice(devices)
+    # Store row
 
-    added_to_cart = np.random.choice([0, 1], p=[0.3, 0.7])
-
-    # -------------------------
-    # Lógica de conversão
-    # -------------------------
-
-    conversion_score = 0
-
-    # fatores positivos
-    conversion_score += previous_purchases * 0.4
-    conversion_score += time_on_site * 0.3
-    conversion_score += cart_value * 0.02
-    conversion_score += viewed_reviews * 1.5
-    conversion_score += pages_visited * 0.2
-    conversion_score += added_to_cart * 4
-
-    # influência da origem do tráfego
-    if traffic_source == "Email":
-        conversion_score += 2
-
-    elif traffic_source == "Organic":
-        conversion_score += 1
-
-    # influência do dispositivo
-    if device == "Desktop":
-        conversion_score += 1
-
-    elif device == "Mobile":
-        conversion_score -= 0.5
-
-    # probabilidade final
-    probability = 1 / (1 + np.exp(-0.1 * (conversion_score - 10)))
-
-    converted = np.random.choice([0, 1], p=[1 - probability, probability])
 
     data.append([
         age,
@@ -81,7 +101,8 @@ for _ in range(n_samples):
         converted
     ])
 
-# Criar DataFrame
+# Create DataFrame
+
 columns = [
     "Age",
     "PreviousPurchases",
@@ -97,8 +118,10 @@ columns = [
 
 df = pd.DataFrame(data, columns=columns)
 
-# Guardar CSV
 df.to_csv("ecommerce_data.csv", index=False)
 
-print("Dataset generated successfully!")
+print("\nCLASS DISTRIBUTION")
+print(df["Converted"].value_counts())
+
+print("\nDataset generated successfully!")
 print(df.head())
