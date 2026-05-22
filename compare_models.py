@@ -124,3 +124,46 @@ print("MODEL COMPARISON")
 print("=" * 50)
 
 print(results_df)
+
+# FEATURE IMPORTANCE
+
+print("\n" + "=" * 50)
+print("RANDOM FOREST FEATURE IMPORTANCE")
+print("=" * 50)
+
+# Recreate Random Forest pipeline
+rf_pipeline = Pipeline(steps=[
+    ("preprocessor", preprocessor),
+    ("classifier", RandomForestClassifier(
+        n_estimators=100,
+        max_depth=5,
+        random_state=42
+    ))
+])
+
+# Train
+rf_pipeline.fit(X_train, y_train)
+
+# Get transformed feature names
+feature_names = rf_pipeline.named_steps[
+    "preprocessor"
+].get_feature_names_out()
+
+# Get importances
+importances = rf_pipeline.named_steps[
+    "classifier"
+].feature_importances_
+
+# Create DataFrame
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Importance": importances
+})
+
+# Sort descending
+importance_df = importance_df.sort_values(
+    by="Importance",
+    ascending=False
+)
+
+print(importance_df)
