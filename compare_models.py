@@ -26,38 +26,17 @@ y = df["Converted"]
 
 # Feature groups
 
-categorical_features = [
-    "TrafficSource",
-    "Device"
-]
+categorical_features = ["TrafficSource","Device"]
 
-numerical_features = [
-    "Age",
-    "PreviousPurchases",
-    "TimeOnSite",
-    "CartValue",
-    "ViewedReviews",
-    "PagesVisited",
-    "AddedToCart"
-]
+numerical_features = ["Age","PreviousPurchases","TimeOnSite","CartValue","ViewedReviews","PagesVisited","AddedToCart"]
 
 # Preprocessing
 
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(), categorical_features),
-        ("num", StandardScaler(), numerical_features)
-    ]
-)
+preprocessor = ColumnTransformer(transformers=[("cat", OneHotEncoder(), categorical_features),("num", StandardScaler(), numerical_features)])
 
 # Train/Test Split
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
 
 # Models
 
@@ -87,10 +66,7 @@ for model_name, classifier in models.items():
     print("=" * 50)
 
     # Create pipeline
-    pipeline = Pipeline(steps=[
-        ("preprocessor", preprocessor),
-        ("classifier", classifier)
-    ])
+    pipeline = Pipeline(steps=[("preprocessor", preprocessor),("classifier", classifier)])
 
     # Train
     pipeline.fit(X_train, y_train)
@@ -101,10 +77,7 @@ for model_name, classifier in models.items():
     # Accuracy
     accuracy = accuracy_score(y_test, y_pred)
 
-    results.append({
-        "Model": model_name,
-        "Accuracy": accuracy
-    })
+    results.append({"Model": model_name,"Accuracy": accuracy})
 
     # Print results
     print(f"\nAccuracy: {accuracy:.2f}")

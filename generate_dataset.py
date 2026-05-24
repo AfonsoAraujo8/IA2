@@ -12,18 +12,9 @@ n_samples = 3000
 
 data = []
 
-traffic_sources = [
-    "Organic",
-    "Ads",
-    "Social Media",
-    "Email"
-]
+traffic_sources = ["Organic","Ads","Social Media","Email"]
 
-devices = [
-    "Mobile",
-    "Desktop",
-    "Tablet"
-]
+devices = ["Mobile","Desktop","Tablet"]
 
 # Generate dataset
 

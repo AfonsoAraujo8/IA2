@@ -20,40 +20,19 @@ y = df["Converted"]
 
 categorical_features = ["TrafficSource", "Device"]
 
-numerical_features = [
-    "Age",
-    "PreviousPurchases",
-    "TimeOnSite",
-    "CartValue",
-    "ViewedReviews",
-    "PagesVisited",
-    "AddedToCart"
-]
+numerical_features = ["Age","PreviousPurchases","TimeOnSite","CartValue","ViewedReviews","PagesVisited","AddedToCart"]
 
 # Preprocessing
 
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(), categorical_features),
-        ("num", StandardScaler(), numerical_features)
-    ]
-)
+preprocessor = ColumnTransformer(transformers=[("cat", OneHotEncoder(), categorical_features),("num", StandardScaler(), numerical_features)])
 
 # Create pipeline
 
-model = Pipeline(steps=[
-    ("preprocessor", preprocessor),
-    ("classifier", LogisticRegression(max_iter=1000))
-])
+model = Pipeline(steps=[("preprocessor", preprocessor),("classifier", LogisticRegression(max_iter=1000))])
 
 # Train/Test Split
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
 
 # Train model
 
