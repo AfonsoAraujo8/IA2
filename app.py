@@ -2,15 +2,11 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# -----------------------------
 # Load trained model
-# -----------------------------
 
 model = joblib.load("model.pkl")
 
-# -----------------------------
 # Page title
-# -----------------------------
 
 st.set_page_config(page_title="E-commerce Conversion Predictor")
 
@@ -20,9 +16,7 @@ st.write(
     "Predict whether a customer is likely to complete a purchase."
 )
 
-# -----------------------------
 # User Inputs
-# -----------------------------
 
 age = st.slider("Age", 18, 65, 30)
 
@@ -54,9 +48,7 @@ added_to_cart = st.selectbox(
     [0, 1]
 )
 
-# -----------------------------
 # Create DataFrame
-# -----------------------------
 
 input_data = pd.DataFrame({
     "Age": [age],
@@ -70,9 +62,7 @@ input_data = pd.DataFrame({
     "AddedToCart": [added_to_cart]
 })
 
-# -----------------------------
 # Prediction
-# -----------------------------
 
 if st.button("Predict Conversion"):
 
